@@ -1,0 +1,21 @@
+body{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color:darkslategray;
+    font-family: sans-serif;
+}
+main{
+    width:35rem;
+    display:flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: center;
+    gap:1rem;
+    border: 2px gray solid;
+    border-radius: 20px;
+    padding:1rem;
+    background-color:white;
+}

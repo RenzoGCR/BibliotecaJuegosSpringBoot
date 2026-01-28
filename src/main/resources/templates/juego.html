@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca de Juegos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Sticky Menu - Mismo que games.html */
+        .sticky-menu {
+            position: sticky;
+            top: 0;
+            background-color: #2c3e50;
+            padding: 10px 0;
+            z-index: 1000;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .sticky-menu ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .sticky-menu li {
+            margin: 0 5px;
+        }
+
+        .sticky-menu a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        .sticky-menu a:hover {
+            background-color: #34495e;
+            color: white;
+        }
+
+        .sticky-menu a.active {
+            background-color: #3498db;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Game Content */
+        .game-content {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .game-content {
+                flex-direction: column;
+            }
+        }
+
+        /* Game Image */
+        .game-image {
+            flex: 0 0 300px;
+            max-width: 300px;
+        }
+
+        .image-container {
+            width: 100%;
+            height: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+        }
+
+        /* Game Info - Estructura en fila */
+        .game-info {
+            flex: 1;
+            padding: 10px;
+        }
+
+        .game-name {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .game-detail {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .game-detail:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            width: 120px;
+            min-width: 120px;
+        }
+
+        .detail-value {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .platform-value {
+            background-color: #3498db;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .year-value {
+            background-color: #e74c3c;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .id-value {
+            background-color: #2c3e50;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Game Description */
+        .game-description {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+        }
+
+        .description-label {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .description-text {
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* Back Button */
+        .back-button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 12px 35px;
+            background-color: #2c3e50;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #1a252f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 1px solid #eaeaea;
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+
+        .author {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<h1>Biblioteca de Juegos</h1>
+
+<!-- Sticky Menu - Mismo que games.html -->
+<nav class="sticky-menu">
+    <ul>
+        <!-- Opción "Todas" -->
+        <li>
+            <a th:href="@{/juegos}"
+               th:classappend="${selectedPlatform == 'all'} ? 'active'">
+                Todas
+            </a>
+        </li>
+
+        <!-- Opciones dinámicas desde la base de datos -->
+        <li th:each="plat : ${platforms}">
+            <a th:href="@{/juegos(platform=${plat})}"
+               th:text="${plat}"
+               th:classappend="${selectedPlatform == plat} ? 'active'">
+                Plataforma
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<!-- Game Content: Image + Info -->
+<div class="game-content">
+    <!-- Image on the left -->
+    <div class="game-image">
+        <div class="image-container">
+            <img th:if="${game.imageUrl != null and !game.imageUrl.isEmpty()}"
+                 th:src="@{'https://picsum.photos/seed/'+${game.id}+'/300/200'}"
+                 alt="Imagen del juego"
+                 style="width: 100%; height: 100%; object-fit: cover;">
+            <div th:unless="${game.imageUrl != null and !game.imageUrl.isEmpty()}"
+                 style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                Imagen del Juego
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Info on the right -->
+    <div class="game-info">
+        <div class="game-name" th:text="${game.title}">Nombre del juego</div>
+
+        <div class="game-detail">
+            <div class="detail-label">Plataforma:</div>
+            <div class="detail-value">
+                <span class="platform-value" th:text="${game.platform}">PC</span>
+            </div>
+        </div>
+
+        <div class="game-detail">
+            <div class="detail-label">Año:</div>
+            <div class="detail-value">
+                <span class="year-value" th:text="${game.year}">2024</span>
+            </div>
+        </div>
+
+        <div class="game-detail">
+            <div class="detail-label">ID:</div>
+            <div class="detail-value">
+                <span class="id-value" th:text="${game.id}">#001</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Game Description -->
+<div class="game-description">
+    <div class="description-label">Descripción</div>
+    <div class="description-text" th:text="${game.description != null ? game.description : 'Sin descripción disponible'}">
+        Descripción larga del videojuego. Aquí va información detallada sobre el juego,
+        su trama, características principales, modos de juego, personajes y todo lo
+        relevante para que los usuarios conozcan mejor este título.
+    </div>
+</div>
+
+<!-- Back Button -->
+<div class="back-button-container">
+    <a th:href="@{/juegos}" class="back-button">Volver</a>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p class="author">Realizado por Francisco</p>
+</div>
+</body>
+</html>

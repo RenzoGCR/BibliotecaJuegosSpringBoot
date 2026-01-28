@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Juegos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Sticky Menu */
+        .sticky-menu {
+            position: sticky;
+            top: 0;
+            background-color: #2c3e50;
+            padding: 10px 0;
+            z-index: 1000;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .sticky-menu ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .sticky-menu li {
+            margin: 0 5px;
+        }
+
+        .sticky-menu a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        .sticky-menu a:hover {
+            background-color: #34495e;
+            color: white;
+        }
+
+        /* Estilo para la opción activa */
+        .sticky-menu a.active {
+            background-color: #3498db;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Grid Layout */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 columnas por fila */
+            gap: 20px;
+        }
+
+        /* Card Style */
+        .game-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.15);
+        }
+
+        .game-image-container {
+            height: 150px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .game-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .no-image {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .game-content {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .game-info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .btn-container {
+            margin-top: auto;
+            padding-top: 15px;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: background-color 0.2s;
+            width: 80%;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .no-games {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            grid-column: 1 / -1; /* Ocupa todo el ancho */
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .games-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .games-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .games-grid { grid-template-columns: 1fr; }
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Biblioteca de Juegos</h1>
+
+    <!-- Sticky Menu Dinámico -->
+    <nav class="sticky-menu">
+        <ul>
+            <!-- Opción "Todas" -->
+            <li>
+                <a th:href="@{/juegos}"
+                   th:classappend="${selectedPlatform == 'all'} ? 'active'">
+                   Todas
+                </a>
+            </li>
+
+            <!-- Opciones dinámicas desde la base de datos -->
+            <li th:each="plat : ${platforms}">
+                <a th:href="@{/juegos(platform=${plat})}"
+                   th:text="${plat}"
+                   th:classappend="${selectedPlatform == plat} ? 'active'">
+                   Plataforma
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="games-grid">
+        <!-- Mensaje si no hay juegos -->
+        <div th:if="${games.empty}" class="no-games">
+            <p>No hay juegos disponibles para esta selección.</p>
+        </div>
+
+        <!-- Tarjeta de Juego -->
+        <div th:each="game : ${games}" class="game-card">
+
+
+            <div class="game-content">
+                <h3 class="game-title" th:text="${game.title}">Título del Juego</h3>
+                <p class="game-info"><strong>Plataforma:</strong> <span th:text="${game.platform}">PC</span></p>
+
+
+                <div class="btn-container">
+                    <a th:href="@{/juego/{id}(id=${game.id})}" class="btn">Ver Detalle</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p  class="back-link">Realizado por Renzo</p>
+</body>
+</html>
