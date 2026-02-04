@@ -79,4 +79,37 @@ class WebController {
         mainService.saveGame(newGameDTO);
         return "redirect:/juegos"; // Redirigimos a la lista tras guardar
     }
+
+    //Mostrar el formulario de edición
+    @GetMapping("/juego/editar/{id}")
+    public String mostrarFormularioEditar(@PathVariable Integer id, Model model) {
+        if(gameRepository.findById(id).isPresent()) {
+            Game game = gameRepository.findById(id).get();
+
+            // Convertimos la Entidad Game a DTO para rellenar el formulario
+            NewGameDTO dto = new NewGameDTO();
+            dto.setTitle(game.getTitle());
+            dto.setPlatform(game.getPlatform());
+            dto.setYear(game.getYear());
+            dto.setDescription(game.getDescription());
+            dto.setImageUrl(game.getImageUrl());
+
+            model.addAttribute("newGame", dto);
+            model.addAttribute("platforms", gameRepository.findDistinctPlatforms());
+
+            // Pasamos el ID para saber que estamos editando
+            model.addAttribute("gameId", id);
+
+            return "nuevo-juego";
+        } else {
+            return "redirect:/juegos";
+        }
+    }
+
+    //Procesar la edicion
+    @PostMapping("/juego/editar/{id}")
+    public String actualizarJuego(@PathVariable Integer id, @ModelAttribute NewGameDTO newGameDTO) {
+        mainService.updateGame(id, newGameDTO);
+        return "redirect:/juego/" + id; // Volvemos al detalle del juego editado
+    }
 }

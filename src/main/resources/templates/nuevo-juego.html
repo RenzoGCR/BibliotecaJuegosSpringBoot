@@ -2,7 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Añadir Nuevo Juego</title>
+    <title th:text="${gameId == null ? 'Añadir Nuevo Juego' : 'Editar Juego'}">Formulario Juego</title>
     <style>
         body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
         .form-group { margin-bottom: 15px; }
@@ -10,12 +10,15 @@
         input, textarea, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
         button { background-color: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
         button:hover { background-color: #2980b9; }
+        .btn-cancel { margin-left: 10px; color: #666; text-decoration: none; }
     </style>
 </head>
 <body>
-<h1>Añadir Nuevo Juego</h1>
+<h1 th:text="${gameId == null ? 'Añadir Nuevo Juego' : 'Editar ' + newGame.title}"></h1>
 
-<form th:action="@{/juego/nuevo}" th:object="${newGame}" method="post">
+<form th:action="${gameId == null ? '/juego/nuevo' : '/juego/editar/' + gameId}"
+      th:object="${newGame}"
+      method="post">
 
     <div class="form-group">
         <label>Título:</label>
@@ -42,8 +45,9 @@
         <textarea th:field="*{description}" rows="4"></textarea>
     </div>
 
-    <button type="submit">Guardar Juego</button>
-    <a th:href="@{/juegos}" style="margin-left: 10px; color: #666;">Cancelar</a>
+    <button type="submit" th:text="${gameId == null ? 'Guardar Juego' : 'Actualizar Datos'}"></button>
+
+    <a th:href="${gameId == null ? '/juegos' : '/juego/' + gameId}" class="btn-cancel">Cancelar</a>
 </form>
 </body>
 </html>

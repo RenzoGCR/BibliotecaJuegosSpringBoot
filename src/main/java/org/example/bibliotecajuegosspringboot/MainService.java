@@ -21,4 +21,18 @@ public class MainService {
         // Guardamos en la base de datos
         gameRepository.save(game);
     }
+    public void updateGame(Integer id, NewGameDTO newGameDTO) {
+        // Buscamos el juego existente
+        Game game = gameRepository.findById(id).orElseThrow();
+
+        // Actualizamos sus campos
+        game.setTitle(newGameDTO.getTitle());
+        game.setPlatform(newGameDTO.getPlatform());
+        game.setYear(newGameDTO.getYear());
+        game.setDescription(newGameDTO.getDescription());
+        game.setImageUrl(newGameDTO.getImageUrl());
+
+        // Guardamos los cambios
+        gameRepository.save(game);
+    }
 }

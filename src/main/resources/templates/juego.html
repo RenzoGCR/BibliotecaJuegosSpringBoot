@@ -235,6 +235,27 @@
         .author {
             font-style: italic;
         }
+
+        /* Edit Button */
+        .edit-button {
+            display: inline-block;
+            padding: 12px 35px;
+            background-color: #e67e22; /* Color naranja */
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 15px; /* Separación con el botón volver */
+        }
+
+        .edit-button:hover {
+            background-color: #d35400;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
     </style>
 </head>
 <body>
@@ -317,6 +338,7 @@
 
 <!-- Back Button -->
 <div class="back-button-container">
+    <a th:href="@{/juego/editar/{id}(id=${game.id})}" class="edit-button">Editar Juego</a>
     <a th:href="@{/juegos}" class="back-button">Volver</a>
 </div>
 
