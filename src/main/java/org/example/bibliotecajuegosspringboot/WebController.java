@@ -2,10 +2,7 @@ package org.example.bibliotecajuegosspringboot;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,8 +11,11 @@ import java.util.List;
 class WebController {
 
     GameRepository gameRepository;
-    public WebController(GameRepository gameRepository) {
+    private final MainService mainService;
+
+    public WebController(GameRepository gameRepository, MainService mainService) {
         this.gameRepository = gameRepository;
+        this.mainService = mainService;
     }
 
     @GetMapping("/")
@@ -42,14 +42,9 @@ class WebController {
         return "games";
     }
 
-    @GetMapping("/{nombre}")
-    public String saludar(@PathVariable String nombre, Model model)
-    {
-        model.addAttribute("nombre", nombre);
-        model.addAttribute("apellido", "anonimo");
-        return "saludo";
-    }
 
+
+    //Buscar juego por id
     @GetMapping("/juego/{id}")
     public String juego(@PathVariable Integer id, Model model)
     {
@@ -68,5 +63,20 @@ class WebController {
         }
     }
 
+    //Mostrar el formulario
+    @GetMapping("/juego/nuevo")
+    public String mostrarFormulario(Model model) {
+        // Pasamos un objeto vacío para el formulario
+        model.addAttribute("newGame", new NewGameDTO());
+        // Reutilizamos la lista de plataformas por si quieres poner un <select>
+        model.addAttribute("platforms", gameRepository.findDistinctPlatforms());
+        return "nuevo-juego"; // Nombre del nuevo HTML
+    }
 
+    //Procesar el formulario (Guardar)
+    @PostMapping("/juego/nuevo")
+    public String guardarJuego(@ModelAttribute NewGameDTO newGameDTO) {
+        mainService.saveGame(newGameDTO);
+        return "redirect:/juegos"; // Redirigimos a la lista tras guardar
+    }
 }

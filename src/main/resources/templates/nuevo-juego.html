@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Añadir Nuevo Juego</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #2980b9; }
+    </style>
+</head>
+<body>
+<h1>Añadir Nuevo Juego</h1>
+
+<form th:action="@{/juego/nuevo}" th:object="${newGame}" method="post">
+
+    <div class="form-group">
+        <label>Título:</label>
+        <input type="text" th:field="*{title}" required />
+    </div>
+
+    <div class="form-group">
+        <label>Plataforma:</label>
+        <input type="text" th:field="*{platform}" placeholder="Ej: PC, PS5, Xbox" required />
+    </div>
+
+    <div class="form-group">
+        <label>Año:</label>
+        <input type="number" th:field="*{year}" required />
+    </div>
+
+    <div class="form-group">
+        <label>URL Imagen:</label>
+        <input type="text" th:field="*{imageUrl}" placeholder="http://..." />
+    </div>
+
+    <div class="form-group">
+        <label>Descripción:</label>
+        <textarea th:field="*{description}" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Guardar Juego</button>
+    <a th:href="@{/juegos}" style="margin-left: 10px; color: #666;">Cancelar</a>
+</form>
+</body>
+</html>

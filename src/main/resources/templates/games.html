@@ -209,25 +209,36 @@
     </nav>
 
     <div class="games-grid">
-        <!-- Mensaje si no hay juegos -->
         <div th:if="${games.empty}" class="no-games">
             <p>No hay juegos disponibles para esta selección.</p>
         </div>
 
-        <!-- Tarjeta de Juego -->
         <div th:each="game : ${games}" class="game-card">
-
+            <div class="game-image-container" th:if="${game.imageUrl == null or game.imageUrl.isEmpty()}">
+                <span class="no-image">Sin imagen</span>
+            </div>
+            <div class="game-image-container" th:if="${game.imageUrl != null and !game.imageUrl.isEmpty()}">
+                <img th:src="@{'https://picsum.photos/seed/'+${game.id}+'/300/200'}" class="game-image" alt="Juego">
+            </div>
 
             <div class="game-content">
                 <h3 class="game-title" th:text="${game.title}">Título del Juego</h3>
                 <p class="game-info"><strong>Plataforma:</strong> <span th:text="${game.platform}">PC</span></p>
-
 
                 <div class="btn-container">
                     <a th:href="@{/juego/{id}(id=${game.id})}" class="btn">Ver Detalle</a>
                 </div>
             </div>
         </div>
+
+        <a th:href="@{/juego/nuevo}" class="game-card"
+           style="text-decoration: none; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 250px; border: 2px dashed #ccc; background-color: #f9f9f9; cursor: pointer;">
+            <div style="text-align: center; color: #7f8c8d;">
+                <div style="font-size: 60px; line-height: 60px; margin-bottom: 10px;">+</div>
+                <h3 style="margin: 0; font-size: 18px;">Añadir Juego</h3>
+            </div>
+        </a>
+
     </div>
 
     <p  class="back-link">Realizado por Renzo</p>
